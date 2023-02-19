@@ -3,6 +3,36 @@ Class sdm_query{
 	public function __construct($db){
 		$this->c=$db;
 	}
+	public function look_hackwinnersofalltime(){
+		return $this->QuickLook("SELECT MIN(t.hackdate) AS hackdate,
+		MIN(t.hackmsg) AS hackmsg,
+		t.ph_ne,
+		t.ph_fe,
+		t.ph_peli,
+		t.int_ne,
+		t.int_fe,
+		t.int_peli
+ FROM tbl_hackathonwins AS t
+ JOIN (
+   SELECT MAX(ph_ne) AS max_ph_ne,
+		  MAX(ph_fe) AS max_ph_fe,
+		  MAX(ph_peli) AS max_ph_peli,
+		  MAX(int_ne) AS max_int_ne,
+		  MAX(int_fe) AS max_int_fe,
+		  MAX(int_peli) AS max_int_peli
+   FROM tbl_hackathonwins
+ ) AS m
+ ON t.ph_ne = m.max_ph_ne OR
+	t.ph_fe = m.max_ph_fe OR
+	t.ph_peli = m.max_ph_peli OR
+	t.int_ne = m.max_int_ne OR
+	t.int_fe = m.max_int_fe OR
+	t.int_peli = m.max_int_peli
+ GROUP BY ph_ne, ph_fe, ph_peli, int_ne, int_fe, int_peli;");
+	}
+	public function look_gethackathonwinshistory(){
+		return $this->QuickLook("SELECT hackdate, hackmsg,ph_ne,ph_fe,ph_peli,int_ne,int_fe,int_peli FROM tbl_hackathonwins ORDER BY hackdate DESC");
+	}
 	public function homecoverphoto(){
 		return $this->QuickLook("SELECT img FROM tbl_home WHERE cont_type='cover' ORDER BY id DESC LIMIT 1");
 	}

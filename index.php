@@ -26,6 +26,10 @@ if(isset($_POST["tag"])) {	//POST
 // ================================================
 
 switch ($tag) {
+	case "gethackathonwinshistory":
+		$out = UC()->look_gethackathonwinshistory();
+		echo $out;
+	break;
 	case "homecoverphoto":
 		$out = UC()->homecoverphoto();
 		echo $out;
