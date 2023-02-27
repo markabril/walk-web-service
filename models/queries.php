@@ -3,6 +3,12 @@ Class sdm_query{
 	public function __construct($db){
 		$this->c=$db;
 	}
+	public function look_homefeatured(){
+		return $this->QuickLook("SELECT img, title, description,link, btn_name  FROM tbl_home WHERE cont_type='featured'");
+	}
+	public function look_latestfeatured(){
+		return $this->QuickLook("SELECT * FROM tbl_home WHERE cont_type='featured' ORDER BY id DESC LIMIT 1");
+	}
 	public function look_hackwinnersofalltime(){
 		return $this->QuickLook("SELECT MIN(t.hackdate) AS hackdate,
 		MIN(t.hackmsg) AS hackmsg,
