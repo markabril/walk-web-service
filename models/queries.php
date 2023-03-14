@@ -3,6 +3,14 @@ Class sdm_query{
 	public function __construct($db){
 		$this->c=$db;
 	}
+	public function look_getchaptersinglepublic($chapter){
+		$current_date = date("Y-m-d");
+		return $this->QuickLook("SELECT * FROM tbl_lore WHERE publishdate <= ? AND chapter=?",[$current_date,$chapter]);
+	}
+	public function look_getpublishedchapters(){
+		$current_date = date("Y-m-d");
+		return $this->QuickLook("SELECT publishdate,coverimg, chapter,title   FROM tbl_lore WHERE publishdate <= '" . $current_date . "'");
+	}
 	public function look_homefeatured(){
 		return $this->QuickLook("SELECT img, title, description,link, btn_name  FROM tbl_home WHERE cont_type='featured'");
 	}

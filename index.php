@@ -26,6 +26,14 @@ if(isset($_POST["tag"])) {	//POST
 // ================================================
 
 switch ($tag) {
+	case "getchaptersinglepublic":
+		$out = UC()->look_getchaptersinglepublic(sdmdec($_GET["chapter"]));
+		echo $out;
+		break;
+	case "getallpublishedchapters":
+		$out = UC()->look_getpublishedchapters();
+		echo $out;
+		break;
 	case "homefeatured":
 		$out = UC()->look_homefeatured();
 		echo $out;
