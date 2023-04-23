@@ -26,6 +26,141 @@ if(isset($_POST["tag"])) {	//POST
 // ================================================
 
 switch ($tag) {
+
+	case "getmyinfobasic":
+		$out = UC()->look_getmyinfobasic(sdmdec($_GET["user_id"]));
+		echo $out;
+		break;
+	case "changepassword":
+		$out = UC()->fire_changepassword(sdmdec($_POST["oridignid"]),
+		$_POST["inp_oldpassword"],
+		$_POST["inp_inpnewpassword"]
+	
+	);
+		echo $out;
+		break;
+
+		case "changerole":
+			$out = UC()->fire_changerole(sdmdec($_POST["oridignid"]),
+			sdmdec($_POST["inp_rolenew"])
+		);
+			echo $out;
+			break;
+
+			case "changeusername":
+				$out = UC()->fire_changeusername(sdmdec($_POST["oridignid"]),
+				sdmdec($_POST["inp_username"])
+			
+			);
+				echo $out;
+				break;
+
+				case "changeprofilepic":
+					$out = UC()->fire_changeprofilepic(sdmdec($_POST["oridignid"]),
+					sdmdec($_POST["profilepic"])
+				);
+					echo $out;
+					break;
+
+
+
+
+	case "fulljobinfo":
+		$out = UC()->look_fulljobinfo(sdmdec($_GET["itemid"]));
+		echo $out;
+		break;
+ case "getpublicmembers":
+	$out = UC()->look_getpublicmembers();
+	echo $out;
+	break;
+	 case "publishedjobposting":
+		$out = UC()->look_publishedjobposting();
+		echo $out;
+		break;
+	case "addcontributor":
+		$out = UC()->fire_addcontributor(sdmdec(
+			$_POST["inp_profilepic"]),
+		sdmdec($_POST["inp_name"]),
+		sdmdec($_POST["inp_description"]),
+		sdmdec($_POST["inp_featureset"]),
+		$_POST["inp_password"],
+	);
+		echo $out;
+		break;
+	break;
+	case "allcontributors":
+		$out = UC()->look_allcontributors(sdmdec($_GET["managerid"]));
+		echo $out;
+		break;
+	case "publicupdatedetailsful":
+		$out = UC()->look_publicupdatedetailsful(sdmdec($_GET["updateno"]));
+		echo $out;
+		break;
+	case "deleteupdaterec":
+		$out = UC()->fire_deleteupdaterec(sdmdec($_POST["current_updateid"]));
+		echo $out;
+		break;
+	case "deletefeatureitem":
+		$out = UC()->fire_deletefeatureitem(sdmdec($_POST["current_itemId"]));
+		echo $out;
+	break;
+	case "updatebasicinfo":
+		$out = UC()->look_updatebasicinfo(sdmdec($_GET["itemId"]));
+		echo $out;
+		break;
+	case "publicupdates":
+		$out = UC()->look_publicupdates();
+		echo $out;
+		break;
+	case "updateitems":
+	$out = UC()->look_updateitems(sdmdec($_GET["current_updateid"]));
+	echo $out;
+	break;
+	case "newupdateitem":
+	$out = UC()->fire_newupdateitem(
+		sdmdec($_POST["item_id"]),
+		sdmdec($_POST["item_cover"]),
+		sdmdec($_POST["item_title"]),
+		sdmdec($_POST["item_description"])
+	);
+	echo $out;
+	break;
+	case "updatesfromadmin":
+	$out = UC()->look_updatesfromadmin();
+	echo $out;
+	break;
+	case "addnewupdatesetup":
+		$out = UC()->look_addnewupdatesetup(sdmdec($_POST["updatecoverfile"]),sdmdec($_POST["updatetitle"]),sdmdec($_POST["updatedescription"]),sdmdec($_POST["releasedate"]),sdmdec($_POST["versionnumber"]));
+		echo $out;
+		break;
+	case "showlatestnews":
+		$out = UC()->look_showlatestnews();
+		echo $out;
+		break;
+	case "deletenews":
+		$out = UC()->fire_deletenews(sdmdec($_POST["currentnewsnumber"]));
+		echo $out;
+		break;
+	case "singlenewspublic":
+		$out = UC()->look_singlenewspublic(sdmdec($_GET["contentno"]));
+		echo $out;
+		break;
+	case "publicnews":
+		$out = UC()->look_publicnews();
+		echo $out;
+		break;
+	case "getallnews":
+		$out = UC()->fire_getallnews();
+		echo $out;
+		break;
+	case "publishnews":
+		$out = UC()->fire_publishnews(sdmdec($_POST["newsheadline"]),sdmdec($_POST["coverphoto"]),sdmdec($_POST["description"]));
+		echo $out;
+	break;
+	case "createaccount":
+		$out = UC()->fire_createaccount(sdmdec($_POST["username"]),$_POST["pass"],sdmdec($_POST["roles"]),sdmdec($_POST["profilepic"]));
+		echo $out;
+		break;
 	case "getchaptersinglepublic":
 		$out = UC()->look_getchaptersinglepublic(sdmdec($_GET["chapter"]));
 		echo $out;
@@ -182,7 +317,7 @@ switch ($tag) {
 			echo $out;
 	break;
 	case "loginattempt":
-		$out = UC()->fire_deletetournament(
+		$out = UC()->fire_login(
 		sdmdec($_POST['paruname']),
 		$_POST['parpassword']);
 		echo $out;

@@ -3,6 +3,136 @@ Class sdm_query{
 	public function __construct($db){
 		$this->c=$db;
 	}
+	public function look_getmyinfobasic($accid){
+			return $this->QuickLook("SELECT description,datecreated, feature_set  FROM tbl_accounts WHERE id =?",[$accid]);
+	}
+	public function fire_changepassword($itemid,$oldpass,$newpass){
+		$out = json_decode($this->QuickLook("SELECT * FROM tbl_accounts WHERE  id=? AND password=? ",[$itemid,$oldpass]),true);
+
+
+		if(count($out) != 0){
+			$this->QuickFire("UPDATE tbl_accounts SET password=? WHERE id=? AND password=? ",[$newpass, $itemid,$oldpass]);
+			return "true";
+		}else{
+			return "false";
+		}
+
+		
+	}
+	public function fire_changerole($itemid,$newrole){
+		return $this->QuickFire("UPDATE tbl_accounts SET description=? WHERE id=?",[$newrole,$itemid]);
+	}
+	public function fire_changeusername($itemid,$newusername){
+		return $this->QuickFire("UPDATE tbl_accounts SET username=? WHERE id=?");
+	}
+	public function fire_changeprofilepic($itemid,$newprofilepic){
+		return $this->QuickFire("UPDATE tbl_accounts SET profilepic=? WHERE id=?",[$newprofilepic,$itemid]);
+	}
+
+
+
+	public function look_fulljobinfo($itemid){
+		return $this->QuickLook("SELECT * FROM tbl_jobs WHERE id=?",[$itemid]);
+	}
+	public function look_getpublicmembers(){
+		return $this->QuickLook("SELECT * FROM tbl_teammember ORDER BY  CAST(order_no AS INT)  ASC");
+	}
+		public function look_publishedjobposting(){
+			return $this->QuickLook("SELECT id, jobtitle, shortdesc FROM tbl_jobs WHERE status='1'");
+		}
+	public function fire_addcontributor($inp_profilepic,$inp_name,$inp_description,$inp_featureset,$inp_password){
+		$datecreated = date("Y-m-d");
+		$out = json_decode($this->QuickLook("SELECT * FROM tbl_accounts WHERE username=?",[$inp_name]),true);
+		if(count($out) == 0){
+			return $this->QuickFire("INSERT INTO tbl_accounts
+			(username,password,description,feature_set,profilepic,datecreated)
+			VALUES(?,?,?,?,?,?)",[$inp_name,$inp_password,$inp_description,$inp_featureset,$inp_profilepic,$datecreated]);
+		}else{
+			return json_encode(array("status"=>"already existing"));
+		}
+	}
+	public function look_allcontributors($managerid){
+		return $this->QuickLook("SELECT * FROM tbl_accounts WHERE id != ?",[$managerid]);
+	}
+	public function look_publicupdatedetailsful($featureid){
+		$out = "";
+
+		$out = $this->QuickLook("SELECT * FROM  tbl_updateitems LEFT JOIN tbl_updates ON tbl_updates.id = tbl_updateitems.item_parentid 
+		WHERE 
+		tbl_updates.id=?",[$featureid]);
+
+		if(count(json_decode($out,true)) == 0){
+			$out = $this->QuickLook("SELECT *,'' as item_title FROM tbl_updates WHERE tbl_updates.id=?",[$featureid]);
+		}
+
+		return $out;
+	}
+	public function fire_deleteupdaterec($recid){
+		$this->QuickFire("DELETE FROM tbl_updates WHERE id=?",[$recid]);
+		return $this->QuickFire("DELETE FROM tbl_updateitems WHERE item_parentid=?",[$recid]);
+	}
+	public function fire_deletefeatureitem($itemid){
+		return $this->QuickFire("DELETE FROM tbl_updateitems WHERE id=?",[$itemid]);
+	}
+	public function look_updatebasicinfo($itemId){
+		return $this->QuickLook("SELECT * FROM tbl_updates WHERE id=?",[$itemId]);
+	}
+	public function look_publicupdates(){
+		return $this->QuickLook("SELECT * FROM tbl_updates ORDER BY dateposted DESC");
+	}
+	public function look_updateitems($id){
+		return $this->QuickLook("SELECT * FROM tbl_updateitems WHERE item_parentid=?",[$id]);
+	}
+	public function fire_newupdateitem($item_id,$item_cover,$item_title,$item_description){
+		return $this->QuickFire("INSERT INTO tbl_updateitems (item_parentid,item_cover, item_title, item_desc) VALUES(?,?,?,?)",[$item_id,$item_cover,$item_title,$item_description]);
+	}
+	public function look_updatesfromadmin(){
+		return $this->QuickLook("SELECT id, version, headline, releasedate,dateposted FROM tbl_updates ORDER BY dateposted DESC");
+	}
+	public function look_addnewupdatesetup($updatecoverfile,$updatetitle,$updatedescription,$releasedate,$versionnumber){
+		$current_date = date("Y-m-d H:i:s");
+		$this->QuickFire("INSERT INTO tbl_updates
+		(dateposted,headline,coverphoto,details,version,releasedate)
+		VALUES(?,?,?,?,?,?)",[
+			$current_date,
+			$updatetitle,
+			$updatecoverfile,
+			$updatedescription,
+			$versionnumber,
+			$releasedate
+		]);
+		return $this->QuickLook("SELECT id FROM tbl_updates WHERE dateposted=? AND headline=? AND coverphoto=?",[$current_date, $updatetitle, $updatecoverfile]);
+	}
+	public function look_showlatestnews(){
+		return $this->QuickLook("SELECT * FROM tbl_news  ORDER BY dateposted DESC LIMIT 2");
+	}
+	public function fire_deletenews($currentnewsnumber){
+		return $this->QuickFire("DELETE FROM tbl_news WHERE id=?",[$currentnewsnumber]);
+	}
+	public function look_singlenewspublic($contentno){
+		return $this->QuickLook("SELECT * FROM tbl_news WHERE id=? ORDER BY id DESC LIMIT 1",[$contentno]);
+	}
+	public function look_publicnews(){
+		return $this->QuickLook("SELECT * FROM tbl_news  ORDER BY dateposted DESC");
+	}
+	public function fire_getallnews(){
+		return $this->QuickLook("SELECT * FROM tbl_news ORDER BY dateposted DESC");
+	}
+	public function fire_publishnews($newsheadline,$coverphoto,$description){
+		$current_date = date("Y-m-d H:i:s");
+		return $this->QuickFire("INSERT INTO tbl_news (headline,coverphoto,description,dateposted) VALUES(?,?,?,?)",[$newsheadline,$coverphoto,$description,$current_date]);
+	}
+	public function fire_createaccount($username,$password,$roles,$profilepic){
+		$featset = "";
+		$datecreated = date("Y-m-d");
+		$out = json_decode($this->QuickLook("SELECT * FROM tbl_accounts WHERE username=?",[$username]),true);
+		if(count($out) == 0){
+			return $this->QuickFire("INSERT INTO tbl_accounts (username,password,description,feature_set,profilepic,datecreated)
+			VALUES(?,?,?,?,?,?)",[$username,$password,$roles,$featset,$profilepic,$datecreated]);
+		}else{
+			return json_encode(array("status"=>"already existing"));
+		}
+	}
 	public function look_getchaptersinglepublic($chapter){
 		$current_date = date("Y-m-d");
 		return $this->QuickLook("SELECT * FROM tbl_lore WHERE publishdate <= ? AND chapter=?",[$current_date,$chapter]);
@@ -169,11 +299,20 @@ Class sdm_query{
 		$dt = date("Y-m-d H:i:s");
 		return $this->QuickFire("INSERT INTO tbl_home (cont_type, img, title, description, link, btn_name, date_recorded) VALUES (?, ?, ?, ?, ?, ?, ?)",[$ctype,$img,$title,$desc,$link,$btnname,$dt]);
 	}
-	public function fire_deletetournament($uname,$pass){
+	public function fire_login($uname,$pass){
+		// check if accounts are existing
 
-		return $this->QuickLook("SELECT username,feature_set,id FROM tbl_accounts WHERE
-		username=? AND
-		password=? LIMIT 1",[$uname,$pass]);
+		$out = json_decode($this->QuickLook("SELECT id FROM tbl_accounts"),true); 
+
+		if (count($out) == 0){
+			//setup required
+			return "setup";
+		}else{
+			return $this->QuickLook("SELECT username,feature_set,id, profilepic, feature_set FROM tbl_accounts WHERE
+			username=? AND
+			password=? LIMIT 1",[$uname,$pass]);
+		}
+		
 
 	}
 
