@@ -12,10 +12,10 @@ use PHPMailer\PHPMailer\Exception;
 
 $passkey = "walkeregc2023";
 
-if(isset($_POST["tag"])) {	//POST
-	$tag = sdmdec($_POST["tag"],$passkey);
-}else if(isset($_GET["tag"])){ //GET
-	$tag = sdmdec($_GET["tag"],$passkey);
+if (isset($_POST["tag"])) {	//POST
+	$tag = sdmdec($_POST["tag"], $passkey);
+} else if (isset($_GET["tag"])) { //GET
+	$tag = sdmdec($_GET["tag"], $passkey);
 }
 
 // =============== FUNCTION PATTERN (PALARO 20) TECHNOLOGIES ===============
@@ -26,41 +26,204 @@ if(isset($_POST["tag"])) {	//POST
 // ================================================
 
 switch ($tag) {
+	case "applyfeaturereorder":
+		$out = UC()->fire_applyfeaturereorder(
+			sdmdec($_POST["orderno"]),
+			sdmdec($_POST["itemid"])
+		);
+		echo $out;
+		break;
+	case "removecontriacc":
+		$out = UC()->fire_removecontriacc(
+			sdmdec($_POST["currentid"])
+		);
+		echo $out;
+		break;
+	case "saveteamchanges":
+		$out = UC()->fire_saveteamchanges(
+			sdmdec($_POST["valfullname"]),
+			sdmdec($_POST["valpostionname"]),
+			sdmdec($_POST["valordernumber"]),
+			sdmdec($_POST["itemid"]),
+		);
 
+		echo $out;
+		break;
+	case "singleteaminfo":
+		$out = UC()->look_singleteaminfo(
+			sdmdec($_GET["itemid"])
+		);
+
+		echo $out;
+		break;
+	case "singlestorychap":
+		$out = UC()->look_singlestorychap(
+			sdmdec($_GET["itemid"])
+		);
+
+		echo $out;
+		break;
+	case "savestorymodif":
+		$out = UC()->fire_savestorymodif(
+			sdmdec($_POST["val_chapno"]),
+			sdmdec($_POST["val_title"]),
+			sdmdec($_POST["val_description"]),
+			sdmdec($_POST["val_publishdate"]),
+			sdmdec($_POST["coverimg"]),
+			sdmdec($_POST["itemid"])
+		);
+
+		echo $out;
+		break;
+	case "saveitemchanges":
+
+		$out = UC()->fire_saveitemchanges(
+			sdmdec($_POST["val_title"]),
+			sdmdec($_POST["val_description"]),
+			sdmdec($_POST["currfeatitemid"])
+		);
+
+		echo $out;
+		break;
+	case "singlefeatitem";
+		$out = UC()->look_singlefeatitem(
+			sdmdec($_GET["currfeatitemid"])
+		);
+
+		echo $out;
+		break;
+	case "updateorderposfi":
+		$out = UC()->fire_updateorderposfi(
+			sdmdec($_POST["featitemid"]),
+			sdmdec($_POST["ordervalue"])
+		);
+
+		echo $out;
+		break;
+	case "savehackchanges":
+		$out = UC()->fire_savehackchanges(
+			sdmdec($_POST["val_hackdate"]),
+			sdmdec($_POST["val_hackmessage"]),
+			sdmdec($_POST["val_ph_ne"]),
+			sdmdec($_POST["val_ph_fe"]),
+			sdmdec($_POST["val_ph_peli"]),
+			sdmdec($_POST["val_int_ne"]),
+			sdmdec($_POST["val_int_fe"]),
+			sdmdec($_POST["val_int_peli"]),
+			sdmdec($_POST["itemid"])
+		);
+
+		echo $out;
+		break;
+
+	case "saveucchanges":
+		$out = UC()->fire_saveucchanges(
+			sdmdec($_POST["val_ucdate"]),
+			sdmdec($_POST["val_ucmessage"]),
+			sdmdec($_POST["val_ph_ucwin"]),
+			sdmdec($_POST["val_int_ucwin"]),
+			sdmdec($_POST["itemid"])
+		);
+
+		echo $out;
+		break;
+	case "gethackathonsingle":
+		$out = UC()->look_gethackathonsingle(
+			sdmdec($_GET["currentid"])
+		);
+
+		echo $out;
+		break;
+	case "getucsingle":
+		$out = UC()->look_getucsingle(
+			sdmdec($_GET["currentid"])
+		);
+
+		echo $out;
+		break;
+	case "savefeachanges":
+		$out = UC()->fire_savefeachanges(
+			sdmdec($_POST["val_title"]),
+			sdmdec($_POST["val_desc"]),
+			sdmdec($_POST["itemid"]),
+			sdmdec($_POST["featureimg"])
+		);
+
+		echo $out;
+		break;
+	case "featuresingleinfo":
+		$out = UC()->look_featuresingleinfo(
+			sdmdec($_GET["itemid"])
+		);
+
+		echo $out;
+		break;
+	case "savenewschanges":
+		$out = UC()->fire_savenewschanges(
+			sdmdec($_POST["txt_headline"]),
+			sdmdec($_POST["txt_description"]),
+			sdmdec($_POST["itemid"]),
+			sdmdec($_POST["coverphoto"])
+		);
+
+		echo $out;
+		break;
+	case "newinfosingle":
+		$out = UC()->look_newinfosingle(
+			sdmdec($_GET["currentnewsid"])
+		);
+
+		echo $out;
+		break;
+	case "saveupdatechanges":
+		$out = UC()->fire_saveupdatechanges(
+			sdmdec($_POST["val_version"]),
+			sdmdec($_POST["val_title"]),
+			sdmdec($_POST["val_description"]),
+			sdmdec($_POST["val_releaseDate"]),
+			sdmdec($_POST["currentupdateid"])
+		);
+
+		echo $out;
+		break;
 	case "getmyinfobasic":
 		$out = UC()->look_getmyinfobasic(sdmdec($_GET["user_id"]));
 		echo $out;
 		break;
 	case "changepassword":
-		$out = UC()->fire_changepassword(sdmdec($_POST["oridignid"]),
-		$_POST["inp_oldpassword"],
-		$_POST["inp_inpnewpassword"]
-	
-	);
+		$out = UC()->fire_changepassword(
+			sdmdec($_POST["oridignid"]),
+			$_POST["inp_oldpassword"],
+			$_POST["inp_inpnewpassword"]
+
+		);
 		echo $out;
 		break;
 
-		case "changerole":
-			$out = UC()->fire_changerole(sdmdec($_POST["oridignid"]),
+	case "changerole":
+		$out = UC()->fire_changerole(
+			sdmdec($_POST["oridignid"]),
 			sdmdec($_POST["inp_rolenew"])
 		);
-			echo $out;
-			break;
+		echo $out;
+		break;
 
-			case "changeusername":
-				$out = UC()->fire_changeusername(sdmdec($_POST["oridignid"]),
-				sdmdec($_POST["inp_username"])
-			
-			);
-				echo $out;
-				break;
+	case "changeusername":
+		$out = UC()->fire_changeusername(
+			sdmdec($_POST["oridignid"]),
+			sdmdec($_POST["inp_username"])
 
-				case "changeprofilepic":
-					$out = UC()->fire_changeprofilepic(sdmdec($_POST["oridignid"]),
-					sdmdec($_POST["profilepic"])
-				);
-					echo $out;
-					break;
+		);
+		echo $out;
+		break;
+
+	case "changeprofilepic":
+		$out = UC()->fire_changeprofilepic(
+			sdmdec($_POST["oridignid"]),
+			sdmdec($_POST["profilepic"])
+		);
+		echo $out;
+		break;
 
 
 
@@ -69,25 +232,27 @@ switch ($tag) {
 		$out = UC()->look_fulljobinfo(sdmdec($_GET["itemid"]));
 		echo $out;
 		break;
- case "getpublicmembers":
-	$out = UC()->look_getpublicmembers();
-	echo $out;
-	break;
-	 case "publishedjobposting":
+	case "getpublicmembers":
+		$out = UC()->look_getpublicmembers();
+		echo $out;
+		break;
+	case "publishedjobposting":
 		$out = UC()->look_publishedjobposting();
 		echo $out;
 		break;
 	case "addcontributor":
-		$out = UC()->fire_addcontributor(sdmdec(
-			$_POST["inp_profilepic"]),
-		sdmdec($_POST["inp_name"]),
-		sdmdec($_POST["inp_description"]),
-		sdmdec($_POST["inp_featureset"]),
-		$_POST["inp_password"],
-	);
+		$out = UC()->fire_addcontributor(
+			sdmdec(
+				$_POST["inp_profilepic"]
+			),
+			sdmdec($_POST["inp_name"]),
+			sdmdec($_POST["inp_description"]),
+			sdmdec($_POST["inp_featureset"]),
+			$_POST["inp_password"],
+		);
 		echo $out;
 		break;
-	break;
+		break;
 	case "allcontributors":
 		$out = UC()->look_allcontributors(sdmdec($_GET["managerid"]));
 		echo $out;
@@ -103,7 +268,7 @@ switch ($tag) {
 	case "deletefeatureitem":
 		$out = UC()->fire_deletefeatureitem(sdmdec($_POST["current_itemId"]));
 		echo $out;
-	break;
+		break;
 	case "updatebasicinfo":
 		$out = UC()->look_updatebasicinfo(sdmdec($_GET["itemId"]));
 		echo $out;
@@ -113,24 +278,24 @@ switch ($tag) {
 		echo $out;
 		break;
 	case "updateitems":
-	$out = UC()->look_updateitems(sdmdec($_GET["current_updateid"]));
-	echo $out;
-	break;
+		$out = UC()->look_updateitems(sdmdec($_GET["current_updateid"]));
+		echo $out;
+		break;
 	case "newupdateitem":
-	$out = UC()->fire_newupdateitem(
-		sdmdec($_POST["item_id"]),
-		sdmdec($_POST["item_cover"]),
-		sdmdec($_POST["item_title"]),
-		sdmdec($_POST["item_description"])
-	);
-	echo $out;
-	break;
+		$out = UC()->fire_newupdateitem(
+			sdmdec($_POST["item_id"]),
+			sdmdec($_POST["item_cover"]),
+			sdmdec($_POST["item_title"]),
+			sdmdec($_POST["item_description"])
+		);
+		echo $out;
+		break;
 	case "updatesfromadmin":
-	$out = UC()->look_updatesfromadmin();
-	echo $out;
-	break;
+		$out = UC()->look_updatesfromadmin();
+		echo $out;
+		break;
 	case "addnewupdatesetup":
-		$out = UC()->look_addnewupdatesetup(sdmdec($_POST["updatecoverfile"]),sdmdec($_POST["updatetitle"]),sdmdec($_POST["updatedescription"]),sdmdec($_POST["releasedate"]),sdmdec($_POST["versionnumber"]));
+		$out = UC()->look_addnewupdatesetup(sdmdec($_POST["updatecoverfile"]), sdmdec($_POST["updatetitle"]), sdmdec($_POST["updatedescription"]), sdmdec($_POST["releasedate"]), sdmdec($_POST["versionnumber"]));
 		echo $out;
 		break;
 	case "showlatestnews":
@@ -154,11 +319,11 @@ switch ($tag) {
 		echo $out;
 		break;
 	case "publishnews":
-		$out = UC()->fire_publishnews(sdmdec($_POST["newsheadline"]),sdmdec($_POST["coverphoto"]),sdmdec($_POST["description"]));
+		$out = UC()->fire_publishnews(sdmdec($_POST["newsheadline"]), sdmdec($_POST["coverphoto"]), sdmdec($_POST["description"]));
 		echo $out;
-	break;
+		break;
 	case "createaccount":
-		$out = UC()->fire_createaccount(sdmdec($_POST["username"]),$_POST["pass"],sdmdec($_POST["roles"]),sdmdec($_POST["profilepic"]));
+		$out = UC()->fire_createaccount(sdmdec($_POST["username"]), $_POST["pass"], sdmdec($_POST["roles"]), sdmdec($_POST["profilepic"]));
 		echo $out;
 		break;
 	case "getchaptersinglepublic":
@@ -175,31 +340,39 @@ switch ($tag) {
 		break;
 	case "latestfeatured":
 		$out = UC()->look_latestfeatured();
-			echo $out;
+		echo $out;
 		break;
 	case "gethackathonwinshistory":
 		$out = UC()->look_gethackathonwinshistory();
 		echo $out;
-	break;
+		break;
 	case "homecoverphoto":
 		$out = UC()->homecoverphoto();
 		echo $out;
-	break;
+		break;
+	case "homelogo":
+		$out = UC()->homelogo();
+		echo $out;
+		break;
 	case "homehackathonwinners":
 		$out = UC()->homehackathonwinners();
 		echo $out;
-	break;
+		break;
 	case "homefeatures":
 		$out = UC()->homefeatures();
 		echo $out;
-	break;
+		break;
 	case "homebottompanel":
 		$out = UC()->homebottompanel();
 		echo $out;
-	break;
+		break;
+	case "homeucwins":
+		$out = UC()->homeucwins();
+		echo $out;
+		break;
 
 	case "updatejobstatus":
-		$out = UC()->fire_updatejobstatus(sdmdec($_POST["currentId"]),sdmdec($_POST["status"]));
+		$out = UC()->fire_updatejobstatus(sdmdec($_POST["currentId"]), sdmdec($_POST["status"]));
 		echo $out;
 		break;
 	case "deletejob":
@@ -207,25 +380,25 @@ switch ($tag) {
 		echo $out;
 		break;
 	case "addjob":
-		$out = UC()->fire_addjob(sdmdec($_POST["jobtitle"]),sdmdec($_POST["shortdesc"]),sdmdec($_POST["fulldesc"]));
+		$out = UC()->fire_addjob(sdmdec($_POST["jobtitle"]), sdmdec($_POST["shortdesc"]), sdmdec($_POST["fulldesc"]));
 		echo $out;
-	break;
+		break;
 	case "getjob":
 		$out = UC()->look_getjob();
 		echo $out;
-	break;
+		break;
 	case "deleteteam":
 		$out = UC()->look_deleteteam(sdmdec($_GET["currentId"]));
 		echo $out;
 		break;
 	case "addteam":
-		$out = UC()->fire_addteam(sdmdec($_POST["facepic"]),sdmdec($_POST["fullname"]),sdmdec($_POST["positionname"]),sdmdec($_POST["ordernumber"]));
+		$out = UC()->fire_addteam(sdmdec($_POST["facepic"]), sdmdec($_POST["fullname"]), sdmdec($_POST["positionname"]), sdmdec($_POST["ordernumber"]));
 		echo $out;
-	break;
+		break;
 	case "getteam":
 		$out = UC()->look_getteam();
 		echo $out;
-	break;
+		break;
 	case "deletechapter":
 		$out = UC()->fire_deletechapter(sdmdec($_GET["currentId"]));
 		echo $out;
@@ -237,19 +410,27 @@ switch ($tag) {
 	case "addedstories":
 		$out = UC()->look_addedstories();
 		echo $out;
-	break;
+		break;
 	case "newstordata":
-		$out = UC()->fire_newstordata(sdmdec($_POST["vl_coverimg"]),sdmdec($_POST["vl_chapnum"]),sdmdec($_POST["vl_chaptitle"]),sdmdec($_POST["vl_chapstory"]),sdmdec($_POST["vl_publishdt"]));
+		$out = UC()->fire_newstordata(sdmdec($_POST["vl_coverimg"]), sdmdec($_POST["vl_chapnum"]), sdmdec($_POST["vl_chaptitle"]), sdmdec($_POST["vl_chapstory"]), sdmdec($_POST["vl_publishdt"]));
 		echo $out;
-	break;
+		break;
 	case "deletehackwin":
 		$out = UC()->deletehackwin(sdmdec($_GET["currentId"]));
+		echo $out;
+		break;
+	case "deleteucwin":
+		$out = UC()->deleteucwin(sdmdec($_GET["currentId"]));
 		echo $out;
 		break;
 	case "gethackwins":
 		$out = UC()->gethackwins();
 		echo $out;
-	break;
+		break;
+	case "getucwins":
+		$out = UC()->getucwins();
+		echo $out;
+		break;
 	case "addnewhackwin":
 
 		$out = UC()->look_addnewhackwin(
@@ -261,6 +442,17 @@ switch ($tag) {
 			sdmdec($_POST["vl_int_ne"]),
 			sdmdec($_POST["vl_int_fe"]),
 			sdmdec($_POST["vl_int_peli"])
+		);
+		echo $out;
+
+
+		break;
+	case "addnewucwin":
+		$out = UC()->look_addnewucwin(
+			sdmdec($_POST["vl_ucdate"]),
+			sdmdec($_POST["vl_ucmessage"]),
+			sdmdec($_POST["vl_ph_ucwin"]),
+			sdmdec($_POST["vl_int_ucwin"]),
 		);
 		echo $out;
 
@@ -284,7 +476,7 @@ switch ($tag) {
 			sdmdec($_POST["type"])
 		);
 		echo $out;
-	break;
+		break;
 	case "deleteafeature":
 		$out = UC()->fire_deleteFeature(sdmdec($_GET["featureid"]));
 		echo $out;
@@ -297,13 +489,14 @@ switch ($tag) {
 		$out = UC()->fire_addnewfeature(
 			sdmdec($_POST['feattitle']),
 			sdmdec($_POST['featdesc']),
-			sdmdec($_POST['featimg']));
+			sdmdec($_POST['featimg'])
+		);
 
 		echo $out;
-	break;
+		break;
 	case "getlatestcover":
 		$out = UC()->look_lasestcover();
-			echo $out;
+		echo $out;
 		break;
 	case "addhomefeature":
 		$out = UC()->fire_addnewhomefeat(
@@ -314,40 +507,44 @@ switch ($tag) {
 			sdmdec($_POST['link']),
 			sdmdec($_POST['btnhome'])
 		);
-			echo $out;
-	break;
+		echo $out;
+		break;
 	case "loginattempt":
 		$out = UC()->fire_login(
-		sdmdec($_POST['paruname']),
-		$_POST['parpassword']);
+			sdmdec($_POST['paruname']),
+			$_POST['parpassword']
+		);
 		echo $out;
-	break;
+		break;
 }
 
-function UC() {
-    $c = new connection();
-    $c = $c->sdm_connect();
-    $sdm_q = new sdm_query($c);
-    $c = null;
-    return $sdm_q;
+function UC()
+{
+	$c = new connection();
+	$c = $c->sdm_connect();
+	$sdm_q = new sdm_query($c);
+	$c = null;
+	return $sdm_q;
 }
 
 // NEW END TO END ENCRYPTION ENGINE IMPORTED IN PALARO 20 TECH
-function sdmenc($data){
+function sdmenc($data)
+{
 	global $passkey;
-	$keycode = openssl_digest(utf8_encode($passkey),"sha512",true);
-	$string = substr($keycode, 10,24);
+	$keycode = openssl_digest(utf8_encode($passkey), "sha512", true);
+	$string = substr($keycode, 10, 24);
 	$utfData = utf8_encode($data);
-	$encryptData = openssl_encrypt($utfData, "DES-EDE3", $string, OPENSSL_RAW_DATA,'');
+	$encryptData = openssl_encrypt($utfData, "DES-EDE3", $string, OPENSSL_RAW_DATA, '');
 	$base64Data = base64_encode($encryptData);
 	return $base64Data;
 }
-function sdmdec($data){
+function sdmdec($data)
+{
 	global $passkey;
-	$keycode = openssl_digest(utf8_encode($passkey),"sha512",true);
-	$string = substr($keycode, 10,24);
+	$keycode = openssl_digest(utf8_encode($passkey), "sha512", true);
+	$string = substr($keycode, 10, 24);
 	$utfData = base64_decode($data);
-	$decryptData = openssl_decrypt($utfData, "DES-EDE3", $string, OPENSSL_RAW_DATA,'');
+	$decryptData = openssl_decrypt($utfData, "DES-EDE3", $string, OPENSSL_RAW_DATA, '');
 	return $decryptData;
 }
 ?>
