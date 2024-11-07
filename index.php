@@ -127,6 +127,28 @@ switch ($tag) {
 
 		echo $out;
 		break;
+
+
+	case "savetagischanges":
+		$out = UC()->fire_savetagischanges(
+			sdmdec($_POST["val_tagisseason"]),
+			sdmdec($_POST["val_tagisdate"]),
+			sdmdec($_POST["val_tagismessage"]),
+			sdmdec($_POST["val_ph_overall"]),
+			sdmdec($_POST["val_ph_archer"]),
+			sdmdec($_POST["val_ph_brawler"]),
+			sdmdec($_POST["val_ph_shaman"]),
+			sdmdec($_POST["val_ph_swordsman"]),
+			sdmdec($_POST["val_int_overall"]),
+			sdmdec($_POST["val_int_archer"]),
+			sdmdec($_POST["val_int_brawler"]),
+			sdmdec($_POST["val_int_shaman"]),
+			sdmdec($_POST["val_int_swordsman"]),
+			sdmdec($_POST["itemid"])
+		);
+
+		echo $out;
+		break;
 	case "gethackathonsingle":
 		$out = UC()->look_gethackathonsingle(
 			sdmdec($_GET["currentid"])
@@ -136,6 +158,14 @@ switch ($tag) {
 		break;
 	case "getucsingle":
 		$out = UC()->look_getucsingle(
+			sdmdec($_GET["currentid"])
+		);
+
+		echo $out;
+		break;
+
+	case "gettagissingle":
+		$out = UC()->look_gettagissingle(
 			sdmdec($_GET["currentid"])
 		);
 
@@ -178,6 +208,7 @@ switch ($tag) {
 	case "saveupdatechanges":
 		$out = UC()->fire_saveupdatechanges(
 			sdmdec($_POST["val_version"]),
+			sdmdec($_POST["val_tba"]),
 			sdmdec($_POST["val_title"]),
 			sdmdec($_POST["val_description"]),
 			sdmdec($_POST["val_releaseDate"]),
@@ -295,7 +326,7 @@ switch ($tag) {
 		echo $out;
 		break;
 	case "addnewupdatesetup":
-		$out = UC()->look_addnewupdatesetup(sdmdec($_POST["updatecoverfile"]), sdmdec($_POST["updatetitle"]), sdmdec($_POST["updatedescription"]), sdmdec($_POST["releasedate"]), sdmdec($_POST["versionnumber"]));
+		$out = UC()->look_addnewupdatesetup(sdmdec($_POST["updatecoverfile"]), sdmdec($_POST["updatetitle"]), sdmdec($_POST["updatedescription"]), sdmdec($_POST["releasedate"]), sdmdec($_POST["tba"]), sdmdec($_POST["versionnumber"]));
 		echo $out;
 		break;
 	case "showlatestnews":
@@ -346,6 +377,10 @@ switch ($tag) {
 		$out = UC()->look_gethackathonwinshistory();
 		echo $out;
 		break;
+	case "gettagiswinshistory":
+		$out = UC()->look_gettagiswinshistory();
+		echo $out;
+		break;
 	case "homecoverphoto":
 		$out = UC()->homecoverphoto();
 		echo $out;
@@ -370,6 +405,11 @@ switch ($tag) {
 		$out = UC()->homeucwins();
 		echo $out;
 		break;
+	case "hometagiswins":
+		$out = UC()->hometagiswins();
+		echo $out;
+		break;
+
 
 	case "updatejobstatus":
 		$out = UC()->fire_updatejobstatus(sdmdec($_POST["currentId"]), sdmdec($_POST["status"]));
@@ -423,12 +463,20 @@ switch ($tag) {
 		$out = UC()->deleteucwin(sdmdec($_GET["currentId"]));
 		echo $out;
 		break;
+	case "deletetagiswin":
+		$out = UC()->deletetagiswin(sdmdec($_GET["currentId"]));
+		echo $out;
+		break;
 	case "gethackwins":
 		$out = UC()->gethackwins();
 		echo $out;
 		break;
 	case "getucwins":
 		$out = UC()->getucwins();
+		echo $out;
+		break;
+	case "gettagiswins":
+		$out = UC()->gettagiswins();
 		echo $out;
 		break;
 	case "addnewhackwin":
@@ -455,8 +503,26 @@ switch ($tag) {
 			sdmdec($_POST["vl_int_ucwin"]),
 		);
 		echo $out;
+		break;
 
+	case "addnewtagiswin":
+		$out = UC()->look_addnewtagiswin(
+			sdmdec($_POST["vl_tagisseason"]),
+			sdmdec($_POST["vl_tagisdate"]),
+			sdmdec($_POST["vl_tagismessage"]),
+			sdmdec($_POST["vl_ph_tagiswin_overall"]),
+			sdmdec($_POST["vl_ph_tagiswin_archer"]),
+			sdmdec($_POST["vl_ph_tagiswin_brawler"]),
+			sdmdec($_POST["vl_ph_tagiswin_shaman"]),
+			sdmdec($_POST["vl_ph_tagiswin_swordsman"]),
+			sdmdec($_POST["vl_int_tagiswin_overall"]),
+			sdmdec($_POST["vl_int_tagiswin_archer"]),
+			sdmdec($_POST["vl_int_tagiswin_brawler"]),
+			sdmdec($_POST["vl_int_tagiswin_shaman"]),
+			sdmdec($_POST["vl_int_tagiswin_swordsman"])
+		);
 
+		echo $out;
 		break;
 	case "getbottomsingleinfo":
 		$out = UC()->look_singlebottominfo(sdmdec($_GET["conttype"]));

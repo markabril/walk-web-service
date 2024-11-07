@@ -56,6 +56,23 @@ class connection
 		"int_ucwin" TEXT, 
 		PRIMARY KEY("id" AUTOINCREMENT)
 	  );
+	  CREATE TABLE IF NOT EXISTS "tbl_tagiswins" (
+		"id" INTEGER, 
+		"tagisseason" TEXT, 
+		"tagisdate" TEXT, 
+		"tagismsg" TEXT, 
+		"ph_overall" TEXT, 
+		"ph_archer" TEXT, 
+		"ph_brawler" TEXT, 
+		"ph_shaman" TEXT, 
+		"ph_swordsman" TEXT, 
+		"int_overall" TEXT, 
+		"int_archer" TEXT, 
+		"int_brawler" TEXT, 
+		"int_shaman" TEXT, 
+		"int_swordsman" TEXT, 
+		PRIMARY KEY("id" AUTOINCREMENT)
+	  );
 	  CREATE TABLE IF NOT EXISTS "tbl_home" (
 		"id" INTEGER, 
 		"cont_type" TEXT, 
@@ -108,6 +125,7 @@ class connection
 		"details" TEXT,
 		"version" TEXT,
 		"releasedate" TEXT,
+		"tba" INTEGER DEFAULT 0,
 		PRIMARY KEY("id" AUTOINCREMENT)
 	  );
 	  CREATE TABLE IF NOT EXISTS "tbl_updateitems" (
@@ -163,6 +181,18 @@ class connection
 			$this->conn->exec($sql);
 		} catch (PDOException $e) {
 
+
+			try {
+				// Create table if not exists
+				$sql = '
+	ALTER TABLE "tbl_updates" ADD COLUMN "tba" INTEGER DEFAULT 0;
+	
+
+	';
+				$this->conn->exec($sql);
+			} catch (PDOException $e) {
+
+			}
 		}
 
 

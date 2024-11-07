@@ -67,6 +67,56 @@ class sdm_query
 		id=?
 		", [$val_hackdate, $val_hackmessage, $val_ph_ne, $val_ph_fe, $val_ph_peli, $val_int_ne, $val_int_fe, $val_int_peli, $itemid]);
 	}
+	public function fire_savetagischanges(
+		$val_tagisseason,
+		$val_tagisdate,
+		$val_tagismessage,
+		$val_ph_overall,
+		$val_ph_archer,
+		$val_ph_brawler,
+		$val_ph_shaman,
+		$val_ph_swordsman,
+		$val_int_overall,
+		$val_int_archer,
+		$val_int_brawler,
+		$val_int_shaman,
+		$val_int_swordsman,
+		$itemid
+	) {
+		return $this->QuickFire("UPDATE tbl_tagiswins SET
+		tagisseason=?,
+		tagisdate=?,
+		tagismsg=?,
+		ph_overall=?,
+		ph_archer=?,
+		ph_brawler=?,
+		ph_shaman=?,
+		ph_swordsman=?,
+		int_overall=?,
+		int_archer=?,
+		int_brawler=?,
+		int_shaman=?,
+		int_swordsman=?
+		WHERE
+		id=?
+		", [
+			$val_tagisseason,
+			$val_tagisdate,
+			$val_tagismessage,
+			$val_ph_overall,
+			$val_ph_archer,
+			$val_ph_brawler,
+			$val_ph_shaman,
+			$val_ph_swordsman,
+			$val_int_overall,
+			$val_int_archer,
+			$val_int_brawler,
+			$val_int_shaman,
+			$val_int_swordsman,
+			$itemid
+		]);
+	}
+
 	public function fire_saveucchanges($val_ucdate, $val_ucmessage, $val_ph_ucwin, $val_int_ucwin, $itemid)
 	{
 		return $this->QuickFire("UPDATE tbl_ucwins SET
@@ -86,6 +136,10 @@ class sdm_query
 	{
 		return $this->QuickLook("SELECT * FROM tbl_ucwins WHERE id=?", [$itemid]);
 	}
+	public function look_gettagissingle($itemid)
+	{
+		return $this->QuickLook("SELECT * FROM tbl_tagiswins WHERE id=?", [$itemid]);
+	}
 	public function fire_savefeachanges($val_title, $val_desc, $itemid, $featureimg)
 	{
 		return $this->QuickFire("UPDATE tbl_features SET feattitle=?, featuredesc=?, featureimg=? WHERE id=?", [$val_title, $val_desc, $featureimg, $itemid]);
@@ -102,9 +156,9 @@ class sdm_query
 	{
 		return $this->QuickLook("SELECT * FROM tbl_news WHERE id=?", [$newsid]);
 	}
-	public function fire_saveupdatechanges($val_version, $val_title, $val_description, $val_releaseDate, $currentupdateid)
+	public function fire_saveupdatechanges($val_version, $val_tba, $val_title, $val_description, $val_releaseDate, $currentupdateid)
 	{
-		return $this->QuickFire("UPDATE tbl_updates SET version=?, headline=?, details=?, releasedate=? WHERE id=?", [$val_version, $val_title, $val_description, $val_releaseDate, $currentupdateid]);
+		return $this->QuickFire("UPDATE tbl_updates SET version=?, headline=?, details=?, releasedate=?, tba=? WHERE id=?", [$val_version, $val_title, $val_description, $val_releaseDate, $val_tba, $currentupdateid]);
 	}
 	public function look_getmyinfobasic($accid)
 	{
@@ -169,14 +223,14 @@ class sdm_query
 	}
 	public function look_publicupdatedetailsful($featureid)
 	{
-		$out = "";
 
 		$out = $this->QuickLook("SELECT * FROM  tbl_updateitems LEFT JOIN tbl_updates ON tbl_updates.id = tbl_updateitems.item_parentid 
 		WHERE 
 		tbl_updates.id=? ORDER BY CAST (tbl_updateitems.order_num AS INT) DESC ", [$featureid]);
 
-		if (count(json_decode($out, true)) == 0) {
-			$out = $this->QuickLook("SELECT *,'' as item_title FROM tbl_updates WHERE tbl_updates.id=? ORDER BY CAST (tbl_updateitems.order_num AS INT) DESC ", [$featureid]);
+		if (json_decode($out, true) === []) {
+
+			$out = $this->QuickLook("SELECT *,'' as item_title FROM tbl_updates WHERE tbl_updates.id=?", [$featureid]);
 		}
 
 		return $out;
@@ -208,20 +262,21 @@ class sdm_query
 	}
 	public function look_updatesfromadmin()
 	{
-		return $this->QuickLook("SELECT id, version, headline, releasedate,dateposted FROM tbl_updates ORDER BY dateposted DESC");
+		return $this->QuickLook("SELECT id, version, headline, releasedate,dateposted, tba FROM tbl_updates ORDER BY dateposted DESC");
 	}
-	public function look_addnewupdatesetup($updatecoverfile, $updatetitle, $updatedescription, $releasedate, $versionnumber)
+	public function look_addnewupdatesetup($updatecoverfile, $updatetitle, $updatedescription, $releasedate, $tba, $versionnumber)
 	{
 		$current_date = date("Y-m-d H:i:s");
 		$this->QuickFire("INSERT INTO tbl_updates
-		(dateposted,headline,coverphoto,details,version,releasedate)
-		VALUES(?,?,?,?,?,?)", [
+		(dateposted,headline,coverphoto,details,version,releasedate,tba)
+		VALUES(?,?,?,?,?,?,?)", [
 			$current_date,
 			$updatetitle,
 			$updatecoverfile,
 			$updatedescription,
 			$versionnumber,
-			$releasedate
+			$releasedate,
+			$tba
 		]);
 		return $this->QuickLook("SELECT id FROM tbl_updates WHERE dateposted=? AND headline=? AND coverphoto=?", [$current_date, $updatetitle, $updatecoverfile]);
 	}
@@ -312,6 +367,10 @@ class sdm_query
 	{
 		return $this->QuickLook("SELECT hackdate, hackmsg,ph_ne,ph_fe,ph_peli,int_ne,int_fe,int_peli FROM tbl_hackathonwins ORDER BY hackdate DESC");
 	}
+	public function look_gettagiswinshistory()
+	{
+		return $this->QuickLook("SELECT tagisdate, tagismsg, tagisseason,ph_overall,ph_archer,ph_brawler,ph_shaman,ph_swordsman,int_overall,int_archer,int_brawler,int_shaman,int_swordsman FROM tbl_tagiswins ORDER BY tagisdate DESC");
+	}
 	public function homecoverphoto()
 	{
 		return $this->QuickLook("SELECT img FROM tbl_home WHERE cont_type='cover' ORDER BY id DESC LIMIT 1");
@@ -335,6 +394,11 @@ class sdm_query
 	public function homeucwins()
 	{
 		return $this->QuickLook("SELECT * FROM tbl_ucwins");
+	}
+
+	public function hometagiswins()
+	{
+		return $this->QuickLook("SELECT * FROM tbl_tagiswins");
 	}
 
 	public function fire_updatejobstatus($currentid, $status)
@@ -390,6 +454,10 @@ class sdm_query
 	{
 		return $this->QuickFire("DELETE FROM tbl_ucwins WHERE id=?", [$currentId]);
 	}
+	public function deletetagiswin($currentId)
+	{
+		return $this->QuickFire("DELETE FROM tbl_tagiswins WHERE id=?", [$currentId]);
+	}
 	public function gethackwins()
 	{
 		return $this->QuickLook("SELECT id,hackdate,ph_ne,ph_peli,ph_fe,int_ne,int_peli,int_fe FROM tbl_hackathonwins ORDER BY hackdate DESC");
@@ -397,6 +465,10 @@ class sdm_query
 	public function getucwins()
 	{
 		return $this->QuickLook("SELECT id,ucdate,ph_ucwin,int_ucwin FROM tbl_ucwins ORDER BY ucdate DESC");
+	}
+	public function gettagiswins()
+	{
+		return $this->QuickLook("SELECT * FROM tbl_tagiswins ORDER BY tagisdate DESC");
 	}
 	public function look_addnewhackwin($vl_hackdate, $vl_hackmessage, $vl_ph_ne, $vl_ph_fe, $vl_ph_peli, $vl_int_ne, $vl_int_fe, $vl_int_peli)
 	{
@@ -412,6 +484,53 @@ class sdm_query
 		(ucdate, ucmsg, ph_ucwin, int_ucwin) VALUES
 		(?, ?, ?, ?)
 		", [$vl_ucdate, $vl_ucmessage, $vl_ph_ucwin, $vl_int_ucwin]);
+	}
+	public function look_addnewtagiswin(
+		$vl_tagisseason,
+		$vl_tagisdate,
+		$vl_tagismessage,
+		$vl_ph_tagiswin_overall,
+		$vl_ph_tagiswin_archer,
+		$vl_ph_tagiswin_brawler,
+		$vl_ph_tagiswin_shaman,
+		$vl_ph_tagiswin_swordsman,
+		$vl_int_tagiswin_overall,
+		$vl_int_tagiswin_archer,
+		$vl_int_tagiswin_brawler,
+		$vl_int_tagiswin_shaman,
+		$vl_int_tagiswin_swordsman
+	) {
+		return $this->QuickFire("INSERT INTO tbl_tagiswins
+		(
+		tagisseason,
+		tagisdate, 
+		tagismsg, 
+		ph_overall,
+		ph_archer,
+		ph_brawler,
+		ph_shaman,
+		ph_swordsman,
+		int_overall,
+		int_archer,
+		int_brawler,
+		int_shaman,
+		int_swordsman) VALUES
+		(?, ?, ?, ?, ?,?, ?, ?, ?,?, ?, ?, ?)
+		", [
+			$vl_tagisseason,
+			$vl_tagisdate,
+			$vl_tagismessage,
+			$vl_ph_tagiswin_overall,
+			$vl_ph_tagiswin_archer,
+			$vl_ph_tagiswin_brawler,
+			$vl_ph_tagiswin_shaman,
+			$vl_ph_tagiswin_swordsman,
+			$vl_int_tagiswin_overall,
+			$vl_int_tagiswin_archer,
+			$vl_int_tagiswin_brawler,
+			$vl_int_tagiswin_shaman,
+			$vl_int_tagiswin_swordsman
+		]);
 	}
 
 	public function look_singlebottominfo($ctype)
