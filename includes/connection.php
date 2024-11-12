@@ -163,13 +163,22 @@ class connection
 			// Create table if not exists
 			$sql = '
 	ALTER TABLE "tbl_updateitems" ADD COLUMN "order_num" TEXT AFTER "item_desc";
-	
-
 	';
 			$this->conn->exec($sql);
 		} catch (PDOException $e) {
 
 		}
+		try {
+			// Create table if not exists
+			//type: 0 - Class, 1 - Skill, 2 - MObs, 3 - Equipment, 4 - Misc
+			$sql = '
+	ALTER TABLE "tbl_updateitems" ADD COLUMN "type" INTEGER DEFAULT 4;
+	';
+			$this->conn->exec($sql);
+		} catch (PDOException $e) {
+
+		}
+
 
 		try {
 			// Create table if not exists
@@ -182,22 +191,20 @@ class connection
 		} catch (PDOException $e) {
 
 
-			try {
-				// Create table if not exists
-				$sql = '
-	ALTER TABLE "tbl_updates" ADD COLUMN "tba" INTEGER DEFAULT 0;
-	
 
-	';
-				$this->conn->exec($sql);
-			} catch (PDOException $e) {
-
-			}
 		}
 
 
 
+		try {
+			// Create table if not exists
+			$sql = '
+	ALTER TABLE "tbl_updates" ADD COLUMN "tba" INTEGER DEFAULT 0;
+	';
+			$this->conn->exec($sql);
+		} catch (PDOException $e) {
 
+		}
 
 
 		date_default_timezone_set('Asia/Manila');

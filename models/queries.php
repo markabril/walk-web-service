@@ -40,13 +40,13 @@ class sdm_query
 			$itemid
 		]);
 	}
-	public function fire_saveitemchanges($val_title, $val_description, $currfeatitemid)
+	public function fire_saveitemchanges($val_title, $val_description, $val_type, $currfeatitemid)
 	{
-		return $this->QuickFire("UPDATE tbl_updateitems SET item_title=?, item_desc=? WHERE id=?", [$val_title, $val_description, $currfeatitemid]);
+		return $this->QuickFire("UPDATE tbl_updateitems SET item_title=?, item_desc=?, type=? WHERE id=?", [$val_title, $val_description, $val_type, $currfeatitemid]);
 	}
 	public function look_singlefeatitem($itemid)
 	{
-		return $this->QuickLook("SELECT id, item_title, item_desc FROM tbl_updateitems WHERE id=?", [$itemid]);
+		return $this->QuickLook("SELECT id, item_title, item_desc, type FROM tbl_updateitems WHERE id=?", [$itemid]);
 	}
 	public function fire_updateorderposfi($itemid, $ordernumber)
 	{
@@ -226,7 +226,7 @@ class sdm_query
 
 		$out = $this->QuickLook("SELECT * FROM  tbl_updateitems LEFT JOIN tbl_updates ON tbl_updates.id = tbl_updateitems.item_parentid 
 		WHERE 
-		tbl_updates.id=? ORDER BY CAST (tbl_updateitems.order_num AS INT) DESC ", [$featureid]);
+		tbl_updates.id=? ORDER BY tbl_updateitems.type ASC, CAST (tbl_updateitems.order_num AS INT) DESC ", [$featureid]);
 
 		if (json_decode($out, true) === []) {
 
@@ -256,9 +256,9 @@ class sdm_query
 	{
 		return $this->QuickLook("SELECT id,item_cover,item_title, order_num FROM tbl_updateitems WHERE item_parentid=? ORDER BY CAST(order_num AS INT) ASC", [$id]);
 	}
-	public function fire_newupdateitem($item_id, $item_cover, $item_title, $item_description)
+	public function fire_newupdateitem($item_id, $item_cover, $item_title, $item_description, $type)
 	{
-		return $this->QuickFire("INSERT INTO tbl_updateitems (item_parentid,item_cover, item_title, item_desc) VALUES(?,?,?,?)", [$item_id, $item_cover, $item_title, $item_description]);
+		return $this->QuickFire("INSERT INTO tbl_updateitems (item_parentid,item_cover, item_title, item_desc, type) VALUES(?,?,?,?,?)", [$item_id, $item_cover, $item_title, $item_description, $type]);
 	}
 	public function look_updatesfromadmin()
 	{

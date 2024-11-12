@@ -80,6 +80,7 @@ switch ($tag) {
 		$out = UC()->fire_saveitemchanges(
 			sdmdec($_POST["val_title"]),
 			sdmdec($_POST["val_description"]),
+			sdmdec($_POST["val_type"]),
 			sdmdec($_POST["currfeatitemid"])
 		);
 
@@ -317,7 +318,8 @@ switch ($tag) {
 			sdmdec($_POST["item_id"]),
 			sdmdec($_POST["item_cover"]),
 			sdmdec($_POST["item_title"]),
-			sdmdec($_POST["item_description"])
+			sdmdec($_POST["item_description"]),
+			sdmdec($_POST["type"])
 		);
 		echo $out;
 		break;
